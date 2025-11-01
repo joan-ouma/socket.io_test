@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.io Test</title>
+</head>
+<body>
+<h1>Socket.io Connection Test</h1>
+<div id="status">Disconnected</div>
+<div id="messages"></div>
+
+<!-- Load Socket.io client library -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<script>
+    // Connect to your server
+    const socket = io('http://localhost:5000');
+    const statusDiv = document.getElementById('status');
+    const messagesDiv = document.getElementById('messages');
+
+    // Connection events
+    socket.on('connect', () => {
+        statusDiv.textContent = `Connected! Socket ID: ${socket.id}`;
+        statusDiv.style.color = 'green';
+        addMessage('Connected to server successfully!');
+    });
+
+    socket.on('disconnect', () => {
+        statusDiv.textContent = 'Disconnected';
+        statusDiv.style.color = 'red';
+        addMessage('Disconnected from server');
+    });
+
+    // Add message to display
+    function addMessage(message) {
+        const p = document.createElement('p');
+        p.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+        messagesDiv.appendChild(p);
+    }
+
+    // Test sending messages (optional)
+    setTimeout(() => {
+        socket.emit('test-message', { hello: 'world' });
+    }, 2000);
+</script>
+</body>
+</html>
